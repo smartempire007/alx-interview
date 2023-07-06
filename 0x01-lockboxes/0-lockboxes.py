@@ -4,23 +4,39 @@
 """
 
 
-def canUnlockAll(boxes):
-    """a function that determines if all the
-    boxes can be opened"""
+def canUnlockAll(boxes=[]):
+    """A function that returns True of all box in
+    boxes can be opened
+    """
+    if not boxes:
+        return False
+
     keys = set([0])
-    unlocked = []
-    boxes_copy = boxes[:]
+    for box_id, box in enumerate(boxes):
+        for key in box:
+            if key < len(boxes) and key != box_id:
+                keys.add(key)
 
-    while True:
-        try:
-            key = keys.pop()
-            keys.update(boxes_copy[key])
-            unlocked.append(boxes_copy[key])
-            boxes_copy[key] = []
-        except KeyError:
-            break
+    if len(keys) != len(boxes):
+        return False
 
-    for box in boxes:
-        if box not in unlocked:
-            return False
     return True
+
+
+if __name__ == '__main__':
+    boxes = [
+        [1, 3],
+        [2],
+        [3, 0],
+        [1, 2, 3],
+    ]
+    print(canUnlockAll(boxes))
+
+    boxes = [[1], [2], [3], [4], []]
+    print(canUnlockAll(boxes))
+
+    boxes = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
+    print(canUnlockAll(boxes))
+
+    boxes = [[1, 4], [2], [0, 4, 1], [3], [], [4, 1], [5, 6]]
+    print(canUnlockAll(boxes))
