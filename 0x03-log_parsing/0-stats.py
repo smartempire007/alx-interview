@@ -19,35 +19,50 @@ Warning: In this sample, you will have random value - it’s normal to not
 have the same output as this one.
 '''
 import sys
+import signal
+
+status_codes = {'200', '301', '400', '401', '403', '404', '405', '500'}
+file_size_total = 0
+status_code_counts = {code: 0 for code in status_codes}
+line_count = 0
+
+
+def print_statistics():
+    '''Prints the statistics'''
+    print("Total file size:", file_size_total)
+    for code in sorted(status_codes, key=int):
+        count = status_code_counts[code]
+        if count > 0:
+            print(f"{code}: {count}")
+
+
+def signal_handler(sig, frame):
+    '''Handles the SIGINT signal'''
+    print_statistics()
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == '__main__':
-    status_codes = {'200': 0, '301': 0, '400': 0, '401': 0,
-                    '403': 0, '404': 0, '405': 0, '500': 0}
-    file_size = 0
-    count = 0
-
-    def print_stats():
-        '''Prints the stats'''
-        print('File size: {}'.format(file_size))
-        for key in sorted(status_codes.keys()):
-            if status_codes[key] != 0:
-                print('{}: {}'.format(key, status_codes[key]))
-
     try:
         for line in sys.stdin:
-            count += 1
-            data = line.split()
-            try:
-                file_size += int(data[-1])
-            except BaseException:
-                pass
-            try:
-                status_codes[data[-2]] += 1
-            except BaseException:
-                pass
-            if count % 10 == 0:
-                print_stats()
+            line_count += 1
+            if line_count % 10 == 0:
+                print_statistics()
+
+            parts = line.strip().split()
+            if len(parts) != 10:
+                continue
+
+            ip, date, method, path, protocol, status_code, file_size = parts
+            if not status_code.isdigit() or status_code not in status_codes:
+                continue
+
+            file_size_total += int(file_size)
+            status_code_counts[status_code] += 1
+
     except KeyboardInterrupt:
-        print_stats()
-        raise
-    print_stats()
+        pass
+
+    print_statistics()
