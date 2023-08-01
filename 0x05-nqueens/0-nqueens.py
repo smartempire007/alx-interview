@@ -19,40 +19,47 @@ You are only allowed to import the sys module
 
 import sys
 
+
 if len(sys.argv) != 2:
-    print('Usage: nqueens N')
+    print("Usage: nqueens N")
     sys.exit(1)
 
 try:
-    N = int(sys.argv[1])  # number of queens
+    N = int(sys.argv[1])
     if N < 4:
-        print('N must be at least 4')
+        print("N must be at least 4")
         sys.exit(1)
 except ValueError:
-    print('N must be a number')
+    print("N must be a number")
     sys.exit(1)
 
 
 def resolve_queens(row, queen, positions):
-    """Resolve reachable range of queens"""
-
+    """
+    Resolves/removes reachable range of queen from the matrix then
+    recursively resolves for subsequent possible queen positions
+    for the next row.
+    """
     positions.append(row)
 
-    for i in queen[:]:
-        if any([i == row, i[0] == row[0], i[1] == row[1],
-                i[0] + i[1] == row[0] + row[1],
-                i[0] - i[1] == row[0] - row[1]]):
-            queen.pop(queen.index(i))
+    for cell in queen[:]:
+        if any([cell == row, cell[0] == row[0], cell[1] == row[1],
+                cell[0] - cell[1] == row[0] - row[1],
+                cell[0] + cell[1] == row[0] + row[1]]):
+            queen.pop(queen.index(cell))
 
+    # if end of the recursion
     if len(queen) == 0:
         if len(positions) == N:
             print(positions)
         return
 
-    for j in [i for i in queen if i[1] > row[1] and i[0] != row[0]]:
-        resolve_queens(j, queen[:], positions[:])
+    # else recursively check for possible queen positions
+    for possible_queen_pos in [cell for cell in queen
+                               if cell[0] == queen[0][0]]:
+        resolve_queens(possible_queen_pos, queen[:], positions[:])
 
 
 for i in range(N):
-    resolve_queens([i, 0], [[x, y] for x in range(N)
+    resolve_queens([0, i], [[x, y] for x in range(N)
                             for y in range(N)], [])
