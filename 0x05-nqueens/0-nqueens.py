@@ -20,46 +20,65 @@ You are only allowed to import the sys module
 import sys
 
 
+class NQueen:
+    """Class for solving N Queen Problem"""
+
+    def __init__(self, n):
+        """Global Variables"""
+        self.n = n
+        self.x = [0] * (n + 1)
+
+    def place(self, k, i):
+        """Checks if k Queen can be placed in i column (True)
+        or if there are attacking queens in row or diagonal (False)
+        """
+
+        # j checks from 1 to k - 1 (Up to the previous queen)
+        for j in range(1, k):
+            # There is already a queen in the column
+            # or a queen in the same diagonal
+            if self.x[j] == i or abs(self.x[j] - i) == abs(j - k):
+                return False
+        return True
+
+    def nQueen(self, k):
+        """Tries to place every queen on the board
+        Args:
+        k: starting queen from which to evaluate (should be 1)
+        """
+        # i goes from column 1 to column n (1st column is 1st index)
+        for i in range(1, self.n + 1):
+            if self.place(k, i):
+                # Queen can be placed in i column
+                self.x[k] = i
+                if k == self.n:
+                    # Placed all N Queens (A solution was found)
+                    yield [(i - 1, self.x[i] - 1) for i in range(1, self.n + 1)]
+                else:
+                    # Need to place more Queens
+                    yield from self.nQueen(k + 1)
+
+
+# Main
+
 if len(sys.argv) != 2:
     print("Usage: nqueens N")
     sys.exit(1)
 
+N = sys.argv[1]
+
 try:
-    N = int(sys.argv[1])
-    if N < 4:
-        print("N must be at least 4")
-        sys.exit(1)
+    N = int(N)
 except ValueError:
     print("N must be a number")
     sys.exit(1)
 
+if N < 4:
+    print("N must be at least 4")
+    sys.exit(1)
 
-def resolve_queens(row, queen, positions):
-    """
-    Resolves/removes reachable range of queen from the matrix then
-    recursively resolves for subsequent possible queen positions
-    for the next row.
-    """
-    positions.append(row)
+queen = NQueen(N)
+res = queen.nQueen(1)
 
-    for cell in queen[:]:
-        if any([cell == row, cell[0] == row[0], cell[1] == row[1],
-                cell[0] - cell[1] == row[0] - row[1],
-                cell[0] + cell[1] == row[0] + row[1]]):
-            queen.pop(queen.index(cell))
-
-    # if end of the recursion
-    if len(queen) == 0:
-        if len(positions) == N:
-            print(positions)
-        return
-
-    # else recursively check for possible queen positions
-    for possible_queen_pos in [cell for cell in queen
-                               if cell[0] == queen[0][0]]:
-        resolve_queens(possible_queen_pos, queen[:], positions[:])
-
-
-for i in range(N):
-    resolve_queens([0, i], [[x, y] for x in range(N)
-                            for y in range(N)], [])
+for i in res:
+    print(i)
