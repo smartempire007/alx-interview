@@ -1,0 +1,15 @@
+{
+  "name": "0x06-starwars_api",
+  "version": "1.0.0",
+  "description": "-   Allowed editors:  `vi`,  `vim`,  `emacs`\r -   All your files will be interpreted on Ubuntu 20.04 LTS using  `node`  (version 10.14.x)\r -   All your files should end with a new line\r -   The first line of all your files should be exactly  `#!/usr/bin/node`\r -   A  `README.md`  file, at the root of the folder of the project, is mandatory\r -   Your code should be  `semistandard`  compliant.  [Rules of Standard](https://intranet.alxswe.com/rltoken/9P3gH5mVdJCEKL87E-IMaA \"Rules of Standard\")  +  [semicolons on top](https://intranet.alxswe.com/rltoken/WjMvQfBMKBdsNUuHyg55Dw \"semicolons on top\"). Also as reference:  [AirBnB style](https://intranet.alxswe.com/rltoken/Xp81RT-Sfi7uE_kNCSXunw \"AirBnB style\")\r -   All your files must be executable\r -   The length of your files will be tested using  `wc`\r -   You are not allowed to use  `var`",
+  "main": "0-starwars_characters.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.2",
+    "semistandard": "^17.0.0"
+  }
+}
