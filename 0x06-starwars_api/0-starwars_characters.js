@@ -10,38 +10,47 @@
  * Utilizes the request-promise module for making HTTP requests.
  */
 
-const request = require('request-promise');
-
 /**
- * Fetches and prints characters of the specified Star Wars movie.
+ * This script retrieves information about characters from a Star
+ * Wars movie using the Star Wars API.
+ * It takes a movie ID as a command-line argument and fetches the
+ * corresponding movie data from the API.
+ * The script then extracts the URLs of each character appearing
+ * in the movie and makes additional requests to retrieve their details.
+ * Finally, it prints the name of each character in the order of their
+ * appearance in the movie.
+ *
+ * Dependencies:
+ * - request: npm package for making HTTP requests
+ *
+ * Usage: node script.js <movieID>
+ * Example: node script.js 3
  */
-const fetchData = async () => {
-  try {
-    const movieId = process.argv[2] + '/';
-    const filmURL = 'https://swapi-api.hbtn.io/api/films/';
 
-    // Fetch movie data
-    const filmData = await request(filmURL + movieId);
-    const filmJson = JSON.parse(filmData);
+const request = require('request');
 
-    const characters = filmJson.characters;
+// Get the movie ID from the command-line argument
+const movieId = process.argv[2] + '/';
+const filmURL = 'https://swapi-api.hbtn.io/api/films/';
 
-    // Fetch character data using promises
-    const characterPromises = characters.map(
-        character => request(character));
-    const characterResponses = await Promise.all(
-        characterPromises);
-    const characterData = characterResponses.map(
-        response => JSON.parse(response));
+// Make an API request to fetch movie data
+request(filmURL + movieId, async (err, res, body) => {
+  if (err) return console.error(err);
 
-    // Print character names
-    for (const character of characterData) {
-      console.log(character.name);
-    }
-  } catch (error) {
-    console.log(error);
+  // Extract URLs of each character in the movie as a list object
+  const charURLList = JSON.parse(body).characters;
+
+  // Use the URL list to make new requests for character details
+  // Await ensures that requests are processed in sequential order
+  for (const charURL of charURLList) {
+    await new Promise((resolve, reject) => {
+      request(charURL, (err, res, body) => {
+        if (err) return console.error(err);
+
+        // Extract the character name from the response body and print it
+        console.log(JSON.parse(body).name);
+        resolve();
+      });
+    });
   }
-};
-
-// Invoke the fetchData function to start the process
-fetchData();
+});
