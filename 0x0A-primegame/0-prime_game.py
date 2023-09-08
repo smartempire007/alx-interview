@@ -20,8 +20,8 @@ def isWinner(x, nums):
         nums (list): A list of integers representing the numbers in each round.
 
     Returns:
-        str or None: The name of the winner ("Maria" or "Ben") or None if input
-        validation fails.
+        str or None: The name of the winner ("Maria" or "Ben") or None if
+        input validation fails.
 
     """
 
