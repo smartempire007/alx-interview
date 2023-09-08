@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """Prime Game.
 
-This code defines a game where two players, Maria and Ben, take turns. The goal of the game is
-to determine the winner based on a set of numbers. Each player selects a prime number, and
-removes all multiples of that prime number from the remaining set of numbers. The player who
-cannot make a move loses the round. The code determines the overall winner by counting the number
-of rounds won by each player.
+This code defines a game where two players, Maria and Ben, take turns.
+The goal of the game is to determine the winner based on a set of numbers.
+Each player selects a prime number, and removes all multiples of that
+prime number from the remaining set of numbers. The player who
+cannot make a move loses the round. The code determines the overall winner
+by counting the number of rounds won by each player.
 
 """
 
