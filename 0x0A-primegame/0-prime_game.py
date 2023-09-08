@@ -15,7 +15,8 @@ def isWinner(x, nums):
     """Main Prime game function. Determine the winner.
 
     Args:
-        x (int): A positive integer representing the number of rounds to be played.
+        x (int): A positive integer representing the number of rounds to
+        be played.
         nums (list): A list of integers representing the numbers in each round.
 
     Returns:
